@@ -2,6 +2,7 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
+[![version][version-badge]][package]
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -113,3 +114,6 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 ## License
 
 MIT © [Arthur Denner](https://github.com/arthurdenner/)
+
+[version-badge]: https://img.shields.io/pub/v/theme_mode_handler?style=flat-square
+[package]: https://pub.dev/packages/theme_mode_handler
