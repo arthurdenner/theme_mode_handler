@@ -1,15 +1,16 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
+import 'theme_mode_manager_interface.dart';
+
 class ThemeModeHandler extends StatefulWidget {
-  /// The function that runs when themeMode changes.
+  /// Function that runs when themeMode changes.
   final Widget Function(ThemeMode themeMode) builder;
+
+  /// Implementation of IThemeModeManager to load and save the selected value.
+  final IThemeModeManager manager;
 
   /// Default value to be used when shared preference is null.
   final ThemeMode defaultTheme;
-
-  /// Key used to store the selected value.
-  final String sharedPreferencesKey;
 
   /// If the widget should render an empty container while themeMode is null.
   /// This is the recommended behavior.
@@ -21,10 +22,12 @@ class ThemeModeHandler extends StatefulWidget {
   const ThemeModeHandler({
     Key key,
     @required this.builder,
+    @required this.manager,
     this.defaultTheme = ThemeMode.system,
-    this.sharedPreferencesKey = 'theme_mode_preference',
     this.withFallback = true,
-  }) : super(key: key);
+  })  : assert(builder != null),
+        assert(manager != null),
+        super(key: key);
 
   @override
   ThemeModeHandlerState createState() => ThemeModeHandlerState();
@@ -51,21 +54,12 @@ class ThemeModeHandlerState extends State<ThemeModeHandler> {
   }
 
   Future<void> setThemeMode(ThemeMode value) async {
-    setState(() {
-      _themeMode = value;
-    });
-
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString(
-      widget.sharedPreferencesKey,
-      value.toString(),
-    );
+    setState(() => _themeMode = value);
+    await widget.manager.setThemeMode(value.toString());
   }
 
   Future<ThemeMode> _loadThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final value = prefs.getString(widget.sharedPreferencesKey);
+    final value = await widget.manager.loadThemeMode();
 
     return ThemeMode.values.firstWhere(
       (v) => v.toString() == value,
