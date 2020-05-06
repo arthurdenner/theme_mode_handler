@@ -50,16 +50,12 @@ class _ThemeModeHandlerState extends State<ThemeModeHandler> {
   @override
   void initState() {
     super.initState();
-    _loadThemeMode().then((value) {
-      setState(() {
-        _themeMode = value;
-      });
-    });
+    _loadThemeMode().then(_updateThemeMode);
   }
 
   /// Updates the themeMode and calls `manager.saveThemeMode`.
   Future<void> saveThemeMode(ThemeMode value) async {
-    setState(() => _themeMode = value);
+    _updateThemeMode(value);
     await widget.manager.saveThemeMode(value.toString());
   }
 
@@ -79,5 +75,9 @@ class _ThemeModeHandlerState extends State<ThemeModeHandler> {
     }
 
     return widget.builder(_themeMode);
+  }
+
+  void _updateThemeMode(ThemeMode value) {
+    setState(() => _themeMode = value);
   }
 }
