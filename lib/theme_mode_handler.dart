@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'theme_mode_manager_interface.dart';
 
+/// Wrap the management of the functionality and allow the consumer
+/// to persist and retrieve the user's preference wherever they want.
 class ThemeModeHandler extends StatefulWidget {
   /// Function that runs when themeMode changes.
   final Widget Function(ThemeMode themeMode) builder;
@@ -19,6 +21,7 @@ class ThemeModeHandler extends StatefulWidget {
   /// to prevent a flash effect, you can render an empty container.
   final bool withFallback;
 
+  /// Creates a `ThemeModeHandler`.
   const ThemeModeHandler({
     Key key,
     @required this.builder,
@@ -30,14 +33,15 @@ class ThemeModeHandler extends StatefulWidget {
         super(key: key);
 
   @override
-  ThemeModeHandlerState createState() => ThemeModeHandlerState();
+  _ThemeModeHandlerState createState() => _ThemeModeHandlerState();
 
-  static ThemeModeHandlerState of(BuildContext context) {
-    return context.findAncestorStateOfType<ThemeModeHandlerState>();
+  /// Access to the closest [ThemeModeHandler] instance to the given context.
+  static _ThemeModeHandlerState of(BuildContext context) {
+    return context.findAncestorStateOfType<_ThemeModeHandlerState>();
   }
 }
 
-class ThemeModeHandlerState extends State<ThemeModeHandler> {
+class _ThemeModeHandlerState extends State<ThemeModeHandler> {
   ThemeMode _themeMode;
 
   /// Current selected value.
@@ -46,16 +50,17 @@ class ThemeModeHandlerState extends State<ThemeModeHandler> {
   @override
   void initState() {
     super.initState();
-    _loadThemeMode().then((ThemeMode value) {
+    _loadThemeMode().then((value) {
       setState(() {
         _themeMode = value;
       });
     });
   }
 
-  Future<void> setThemeMode(ThemeMode value) async {
+  /// Updates the themeMode and calls `manager.saveThemeMode`.
+  Future<void> saveThemeMode(ThemeMode value) async {
     setState(() => _themeMode = value);
-    await widget.manager.setThemeMode(value.toString());
+    await widget.manager.saveThemeMode(value.toString());
   }
 
   Future<ThemeMode> _loadThemeMode() async {

@@ -12,7 +12,7 @@ class ExampleThemeModeManager implements IThemeModeManager {
   }
 
   @override
-  Future<bool> setThemeMode(String value) async {
+  Future<bool> saveThemeMode(String value) async {
     final _prefs = await SharedPreferences.getInstance();
 
     return _prefs.setString(_key, value);

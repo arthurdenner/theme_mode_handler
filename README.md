@@ -34,7 +34,7 @@ class MyManager implements IThemeModeManager {
   Future<String> loadThemeMode() async {}
 
   @override
-  Future<bool> setThemeMode(String value) async {}
+  Future<bool> saveThemeMode(String value) async {}
 }
 ```
 
@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
 - Change the `themeMode` with:
 
 ```dart
-ThemeModeHandler.of(context).setThemeMode(value);
+ThemeModeHandler.of(context).saveThemeMode(value);
 ```
 
 This updates the shared preference.

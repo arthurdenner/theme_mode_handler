@@ -8,7 +8,7 @@ class ManagerMock extends Mock implements IThemeModeManager {}
 
 final _mock = ManagerMock();
 
-Widget defaultBuilder(themeMode) {
+Widget defaultBuilder(ThemeMode themeMode) {
   return MaterialApp(
     themeMode: themeMode,
     darkTheme: ThemeData(
@@ -21,7 +21,7 @@ Widget defaultBuilder(themeMode) {
       return Scaffold(
         body: RaisedButton(
           onPressed: () {
-            ThemeModeHandler.of(context).setThemeMode(
+            ThemeModeHandler.of(context).saveThemeMode(
               themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark,
             );
           },
@@ -68,7 +68,7 @@ void main() {
       await tester.tap(find.byType(RaisedButton));
 
       verify(_mock.loadThemeMode()).called(1);
-      verify(_mock.setThemeMode(any)).called(1);
+      verify(_mock.saveThemeMode(any)).called(1);
     });
   });
 
