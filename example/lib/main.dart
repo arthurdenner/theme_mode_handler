@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:theme_mode_handler/theme_mode_handler.dart';
 import 'package:theme_mode_handler/theme_picker_dialog.dart';
 
+import 'theme_mode_manager.dart';
+
 void main() => runApp(ExampleApp());
 
 class ExampleApp extends StatefulWidget {
@@ -13,6 +15,7 @@ class _ExampleAppState extends State<ExampleApp> {
   @override
   Widget build(BuildContext context) {
     return ThemeModeHandler(
+      manager: ExampleThemeModeManager(),
       builder: (ThemeMode themeMode) {
         return MaterialApp(
           themeMode: themeMode,
