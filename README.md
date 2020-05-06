@@ -21,7 +21,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  theme_mode_handler: ^1.0.0
+  theme_mode_handler: ^2.0.0
 ```
 
 ## Usage

@@ -1,6 +1,6 @@
 name: theme_mode_handler
 description: Widget to change themeMode during runtime and persist it across restarts
-version: 1.0.0
+version: 2.0.0
 homepage: 'https://github.com/arthurdenner/theme_mode_handler'
 
 environment:
