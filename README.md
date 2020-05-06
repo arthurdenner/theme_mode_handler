@@ -13,7 +13,7 @@ Widget to change `themeMode` during runtime and persist it across restarts.
 
 Flutter 1.9 introduced a new way to control which theme is used: `MaterialApp.themeMode`. If you have specified the `darkTheme` and `theme` properties, you can use `themeMode` to control it. The property defaults to `ThemeMode.system`.
 
-This package wraps this functionality and allows you to persist and retrieve the user's preference.
+This package wraps this functionality and allows you to persist and retrieve the user's preference wherever you want by implementing an interface.
 
 ## Installation
 
@@ -26,7 +26,19 @@ dependencies:
 
 ## Usage
 
-- Import the package and wrap `MaterialApp` with the widget:
+- Create a class that implements the `IThemeModeManager` interface:
+
+```dart
+class MyManager implements IThemeModeManager {
+  @override
+  Future<String> loadThemeMode() async {}
+
+  @override
+  Future<bool> saveThemeMode(String value) async {}
+}
+```
+
+- Import the `ThemeModeHandler` widget, wrap `MaterialApp` with it and pass it an instance of your manager:
 
 ```dart
 import 'package:theme_mode_handler/theme_mode_handler.dart';
@@ -35,6 +47,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ThemeModeHandler(
+      manager: MyManager(),
       builder: (ThemeMode themeMode) {
         return MaterialApp(
           themeMode: themeMode,
@@ -55,7 +68,7 @@ class MyApp extends StatelessWidget {
 - Change the `themeMode` with:
 
 ```dart
-ThemeModeHandler.of(context).setThemeMode(value);
+ThemeModeHandler.of(context).saveThemeMode(value);
 ```
 
 This updates the shared preference.
