@@ -6,7 +6,7 @@ import 'theme_mode_manager_interface.dart';
 /// to persist and retrieve the user's preference wherever they want.
 class ThemeModeHandler extends StatefulWidget {
   /// Function that runs when themeMode changes.
-  final Widget Function(ThemeMode themeMode) builder;
+  final Widget Function(ThemeMode? themeMode) builder;
 
   /// Implementation of IThemeModeManager to load and save the selected value.
   final IThemeModeManager manager;
@@ -23,29 +23,27 @@ class ThemeModeHandler extends StatefulWidget {
 
   /// Creates a `ThemeModeHandler`.
   const ThemeModeHandler({
-    Key key,
-    @required this.builder,
-    @required this.manager,
+    Key? key,
+    required this.builder,
+    required this.manager,
     this.defaultTheme = ThemeMode.system,
     this.withFallback = true,
-  })  : assert(builder != null),
-        assert(manager != null),
-        super(key: key);
+  })  : super(key: key);
 
   @override
   _ThemeModeHandlerState createState() => _ThemeModeHandlerState();
 
   /// Access to the closest [ThemeModeHandler] instance to the given context.
-  static _ThemeModeHandlerState of(BuildContext context) {
+  static _ThemeModeHandlerState? of(BuildContext context) {
     return context.findAncestorStateOfType<_ThemeModeHandlerState>();
   }
 }
 
 class _ThemeModeHandlerState extends State<ThemeModeHandler> {
-  ThemeMode _themeMode;
+  ThemeMode? _themeMode;
 
   /// Current selected value.
-  ThemeMode get themeMode => _themeMode;
+  ThemeMode? get themeMode => _themeMode;
 
   @override
   void initState() {

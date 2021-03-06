@@ -6,9 +6,9 @@ import 'package:theme_mode_handler/theme_mode_manager_interface.dart';
 
 class ManagerMock extends Mock implements IThemeModeManager {}
 
-final _mock = ManagerMock();
+final IThemeModeManager _mock = ManagerMock();
 
-Widget defaultBuilder(ThemeMode themeMode) {
+Widget defaultBuilder(ThemeMode? themeMode) {
   return MaterialApp(
     themeMode: themeMode,
     darkTheme: ThemeData(
@@ -21,7 +21,7 @@ Widget defaultBuilder(ThemeMode themeMode) {
       return Scaffold(
         body: ElevatedButton(
           onPressed: () {
-            ThemeModeHandler.of(context).saveThemeMode(
+            ThemeModeHandler.of(context)?.saveThemeMode(
               themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark,
             );
           },
@@ -35,31 +35,14 @@ Widget defaultBuilder(ThemeMode themeMode) {
 void main() {
   Widget buildApp({
     bool withFallback = true,
-    Widget Function(ThemeMode) builder = defaultBuilder,
-    bool noManager = false,
+    Widget Function(ThemeMode?) builder = defaultBuilder,
   }) {
     return ThemeModeHandler(
       withFallback: withFallback,
-      manager: noManager ? null : _mock,
+      manager: _mock,
       builder: builder,
     );
   }
-
-  group('assertions', () {
-    testWidgets('throws if builder is null', (tester) async {
-      expect(
-        () => tester.pumpWidget(buildApp(builder: null)),
-        throwsAssertionError,
-      );
-    });
-
-    testWidgets('throws if manager is null', (tester) async {
-      expect(
-        () => tester.pumpWidget(buildApp(noManager: true)),
-        throwsAssertionError,
-      );
-    });
-  });
 
   group('manager', () {
     testWidgets('calls load and set methods only when needed', (tester) async {
@@ -69,7 +52,7 @@ void main() {
       await tester.tap(find.byType(ElevatedButton));
 
       verify(_mock.loadThemeMode()).called(1);
-      verify(_mock.saveThemeMode(any)).called(1);
+      verify(_mock.saveThemeMode('any')).called(1);
     });
   });
 
