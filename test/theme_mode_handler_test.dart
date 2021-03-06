@@ -19,12 +19,13 @@ Widget defaultBuilder(ThemeMode themeMode) {
     ),
     home: Builder(builder: (context) {
       return Scaffold(
-        body: RaisedButton(
+        body: ElevatedButton(
           onPressed: () {
             ThemeModeHandler.of(context).saveThemeMode(
               themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark,
             );
           },
+          child: Text('Toggle theme'),
         ),
       );
     }),
@@ -65,7 +66,7 @@ void main() {
       when(_mock.loadThemeMode()).thenAnswer((_) => Future.value(''));
       await tester.pumpWidget(buildApp());
       await tester.pump();
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
 
       verify(_mock.loadThemeMode()).called(1);
       verify(_mock.saveThemeMode(any)).called(1);
@@ -104,7 +105,7 @@ void main() {
       final scaffold1 = tester.firstWidget<Material>(find.byType(Material));
       expect(scaffold1.color, Colors.white);
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       final scaffold2 = tester.firstWidget<Material>(find.byType(Material));
@@ -121,7 +122,7 @@ void main() {
       final scaffold1 = tester.firstWidget<Material>(find.byType(Material));
       expect(scaffold1.color, Colors.black);
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       final scaffold2 = tester.firstWidget<Material>(find.byType(Material));
@@ -138,7 +139,7 @@ void main() {
       final scaffold1 = tester.firstWidget<Material>(find.byType(Material));
       expect(scaffold1.color, Colors.white);
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       final scaffold2 = tester.firstWidget<Material>(find.byType(Material));

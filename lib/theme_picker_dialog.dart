@@ -28,7 +28,7 @@ class ThemePickerDialog extends StatelessWidget {
 }
 
 void _selectThemeMode(BuildContext context, ThemeMode value) async {
-  ThemeModeHandler.of(context).saveThemeMode(value);
+  await ThemeModeHandler.of(context).saveThemeMode(value);
   Navigator.pop(context, value);
 }
 
