@@ -1,5 +1,6 @@
 name: theme_mode_handler_example
 description: Demonstrates how to use the theme_mode_handler plugin.
+version: 0.0.0
 publish_to: 'none'
 
 environment:
