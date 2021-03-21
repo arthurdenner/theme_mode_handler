@@ -8,7 +8,7 @@ class ManagerMock extends Mock implements IThemeModeManager {}
 
 final IThemeModeManager _mock = ManagerMock();
 
-Widget defaultBuilder(ThemeMode? themeMode) {
+Widget defaultBuilder(ThemeMode themeMode) {
   return MaterialApp(
     themeMode: themeMode,
     darkTheme: ThemeData(
@@ -34,13 +34,13 @@ Widget defaultBuilder(ThemeMode? themeMode) {
 
 void main() {
   Widget buildApp({
-    bool withFallback = true,
-    Widget Function(ThemeMode?) builder = defaultBuilder,
+    Widget? placeholderWidget,
+    Widget Function(ThemeMode) builder = defaultBuilder,
   }) {
     return ThemeModeHandler(
-      withFallback: withFallback,
       manager: _mock,
       builder: builder,
+      placeholderWidget: placeholderWidget,
     );
   }
 
@@ -56,8 +56,9 @@ void main() {
     });
   });
 
-  group('withFallback', () {
-    testWidgets('renders a Container while loading if true', (tester) async {
+  group('placeholderWidget', () {
+    testWidgets('renders a Container by default while loading is true',
+        (tester) async {
       when(_mock.loadThemeMode()).thenAnswer((_) => Future.value(''));
       await tester.pumpWidget(buildApp());
 
@@ -67,13 +68,19 @@ void main() {
       expect(find.byType(Scaffold), findsOneWidget);
     });
 
-    testWidgets('renders its children while loading if false', (tester) async {
+    testWidgets(
+        'renders the placeholderWidget if provided while loading is true',
+        (tester) async {
       when(_mock.loadThemeMode()).thenAnswer((_) => Future.value(''));
-      await tester.pumpWidget(buildApp(withFallback: false));
+      await tester.pumpWidget(buildApp(
+        placeholderWidget: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ));
 
-      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
       await tester.pump();
-      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
   });
 
