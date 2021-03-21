@@ -7,7 +7,7 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-Widget to change `themeMode` during runtime and persist it across restarts.
+Flutter widget to change `themeMode` during runtime and persist it across restarts.
 
 ## Motivation
 
@@ -21,7 +21,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  theme_mode_handler: ^2.0.0
+  theme_mode_handler: ^3.0.0
 ```
 
 ## Usage
@@ -71,13 +71,38 @@ class MyApp extends StatelessWidget {
 ThemeModeHandler.of(context).saveThemeMode(value);
 ```
 
-This updates the shared preference.
-
 - Get the current `themeMode` with:
 
 ```dart
 ThemeModeHandler.of(context).themeMode;
 ```
+
+## API
+
+### builder
+
+Type: `Widget Function(ThemeMode themeMode)`.
+
+Function that runs when themeMode changes.
+
+### manager
+
+Type: `IThemeModeManager`.
+
+Implementation of IThemeModeManager to load and save the selected value.
+
+#### defaultTheme
+
+Type: `ThemeMode`.
+
+Default value to be used when `manager.loadThemeMode` returns `null` or an invalid value.
+
+### placeholderWidget
+
+Type: `Widget?`.
+
+While the themeMode is loaded, you can choose to render a different widget.
+By default, it'll render an empty container.
 
 ## Extra
 
@@ -98,7 +123,7 @@ void _selectThemeMode(BuildContext context) async {
 }
 ```
 
-A complete example can be found on the `example` folder.
+A complete example can be found in the `example` folder.
 
 ## Inspiration
 
