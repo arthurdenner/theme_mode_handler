@@ -7,6 +7,8 @@ class ExampleThemeModeManager implements IThemeModeManager {
   @override
   Future<String?> loadThemeMode() async {
     final _prefs = await SharedPreferences.getInstance();
+    // Intended delay for demonstration purposes
+    await Future.delayed(Duration(milliseconds: 500));
 
     return _prefs.getString(_key);
   }

@@ -16,7 +16,10 @@ class _ExampleAppState extends State<ExampleApp> {
   Widget build(BuildContext context) {
     return ThemeModeHandler(
       manager: ExampleThemeModeManager(),
-      builder: (ThemeMode? themeMode) {
+      placeholderWidget: Center(
+        child: CircularProgressIndicator(),
+      ),
+      builder: (ThemeMode themeMode) {
         return MaterialApp(
           themeMode: themeMode,
           darkTheme: ThemeData(
