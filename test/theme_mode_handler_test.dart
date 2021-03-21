@@ -4,7 +4,23 @@ import 'package:mockito/mockito.dart';
 import 'package:theme_mode_handler/theme_mode_handler.dart';
 import 'package:theme_mode_handler/theme_mode_manager_interface.dart';
 
-class ManagerMock extends Mock implements IThemeModeManager {}
+class ManagerMock extends Mock implements IThemeModeManager {
+  @override
+  Future<String?> loadThemeMode() {
+    return super.noSuchMethod(
+      Invocation.method(#loadThemeMode, []),
+      returnValue: Future.value(''),
+    );
+  }
+
+  @override
+  Future<bool> saveThemeMode(String? value) {
+    return super.noSuchMethod(
+      Invocation.method(#saveThemeMode, ['any']),
+      returnValue: Future.value(true),
+    );
+  }
+}
 
 final IThemeModeManager _mock = ManagerMock();
 
@@ -47,6 +63,7 @@ void main() {
   group('manager', () {
     testWidgets('calls load and set methods only when needed', (tester) async {
       when(_mock.loadThemeMode()).thenAnswer((_) => Future.value(''));
+      when(_mock.saveThemeMode('any')).thenAnswer((_) => Future.value(true));
       await tester.pumpWidget(buildApp());
       await tester.pump();
       await tester.tap(find.byType(ElevatedButton));
@@ -80,7 +97,7 @@ void main() {
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       await tester.pump();
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byType(Scaffold), findsOneWidget);
     });
   });
 
