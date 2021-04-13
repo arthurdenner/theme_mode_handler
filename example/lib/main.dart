@@ -16,6 +16,9 @@ class _ExampleAppState extends State<ExampleApp> {
   Widget build(BuildContext context) {
     return ThemeModeHandler(
       manager: ExampleThemeModeManager(),
+      placeholderWidget: Center(
+        child: CircularProgressIndicator(),
+      ),
       builder: (ThemeMode themeMode) {
         return MaterialApp(
           themeMode: themeMode,
@@ -33,11 +36,11 @@ class _ExampleAppState extends State<ExampleApp> {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final themeMode = ThemeModeHandler.of(context).themeMode;
+    final themeMode = ThemeModeHandler.of(context)?.themeMode;
 
     return Scaffold(
       appBar: AppBar(

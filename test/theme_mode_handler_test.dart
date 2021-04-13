@@ -4,9 +4,25 @@ import 'package:mockito/mockito.dart';
 import 'package:theme_mode_handler/theme_mode_handler.dart';
 import 'package:theme_mode_handler/theme_mode_manager_interface.dart';
 
-class ManagerMock extends Mock implements IThemeModeManager {}
+class ManagerMock extends Mock implements IThemeModeManager {
+  @override
+  Future<String?> loadThemeMode() {
+    return super.noSuchMethod(
+      Invocation.method(#loadThemeMode, []),
+      returnValue: Future.value(''),
+    );
+  }
 
-final _mock = ManagerMock();
+  @override
+  Future<bool> saveThemeMode(String? value) {
+    return super.noSuchMethod(
+      Invocation.method(#saveThemeMode, ['any']),
+      returnValue: Future.value(true),
+    );
+  }
+}
+
+final IThemeModeManager _mock = ManagerMock();
 
 Widget defaultBuilder(ThemeMode themeMode) {
   return MaterialApp(
@@ -19,12 +35,13 @@ Widget defaultBuilder(ThemeMode themeMode) {
     ),
     home: Builder(builder: (context) {
       return Scaffold(
-        body: RaisedButton(
+        body: ElevatedButton(
           onPressed: () {
-            ThemeModeHandler.of(context).saveThemeMode(
+            ThemeModeHandler.of(context)?.saveThemeMode(
               themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark,
             );
           },
+          child: Text('Toggle theme'),
         ),
       );
     }),
@@ -33,47 +50,32 @@ Widget defaultBuilder(ThemeMode themeMode) {
 
 void main() {
   Widget buildApp({
-    bool withFallback = true,
+    Widget? placeholderWidget,
     Widget Function(ThemeMode) builder = defaultBuilder,
-    bool noManager = false,
   }) {
     return ThemeModeHandler(
-      withFallback: withFallback,
-      manager: noManager ? null : _mock,
+      manager: _mock,
       builder: builder,
+      placeholderWidget: placeholderWidget,
     );
   }
-
-  group('assertions', () {
-    testWidgets('throws if builder is null', (tester) async {
-      expect(
-        () => tester.pumpWidget(buildApp(builder: null)),
-        throwsAssertionError,
-      );
-    });
-
-    testWidgets('throws if manager is null', (tester) async {
-      expect(
-        () => tester.pumpWidget(buildApp(noManager: true)),
-        throwsAssertionError,
-      );
-    });
-  });
 
   group('manager', () {
     testWidgets('calls load and set methods only when needed', (tester) async {
       when(_mock.loadThemeMode()).thenAnswer((_) => Future.value(''));
+      when(_mock.saveThemeMode('any')).thenAnswer((_) => Future.value(true));
       await tester.pumpWidget(buildApp());
       await tester.pump();
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
 
       verify(_mock.loadThemeMode()).called(1);
-      verify(_mock.saveThemeMode(any)).called(1);
+      verify(_mock.saveThemeMode('any')).called(1);
     });
   });
 
-  group('withFallback', () {
-    testWidgets('renders a Container while loading if true', (tester) async {
+  group('placeholderWidget', () {
+    testWidgets('renders a Container by default while loading is true',
+        (tester) async {
       when(_mock.loadThemeMode()).thenAnswer((_) => Future.value(''));
       await tester.pumpWidget(buildApp());
 
@@ -83,11 +85,17 @@ void main() {
       expect(find.byType(Scaffold), findsOneWidget);
     });
 
-    testWidgets('renders its children while loading if false', (tester) async {
+    testWidgets(
+        'renders the placeholderWidget if provided while loading is true',
+        (tester) async {
       when(_mock.loadThemeMode()).thenAnswer((_) => Future.value(''));
-      await tester.pumpWidget(buildApp(withFallback: false));
+      await tester.pumpWidget(buildApp(
+        placeholderWidget: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ));
 
-      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
       await tester.pump();
       expect(find.byType(Scaffold), findsOneWidget);
     });
@@ -104,7 +112,7 @@ void main() {
       final scaffold1 = tester.firstWidget<Material>(find.byType(Material));
       expect(scaffold1.color, Colors.white);
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       final scaffold2 = tester.firstWidget<Material>(find.byType(Material));
@@ -121,7 +129,7 @@ void main() {
       final scaffold1 = tester.firstWidget<Material>(find.byType(Material));
       expect(scaffold1.color, Colors.black);
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       final scaffold2 = tester.firstWidget<Material>(find.byType(Material));
@@ -138,7 +146,7 @@ void main() {
       final scaffold1 = tester.firstWidget<Material>(find.byType(Material));
       expect(scaffold1.color, Colors.white);
 
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       final scaffold2 = tester.firstWidget<Material>(find.byType(Material));

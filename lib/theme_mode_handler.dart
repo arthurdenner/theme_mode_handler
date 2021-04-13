@@ -14,44 +14,34 @@ class ThemeModeHandler extends StatefulWidget {
   /// Default value to be used when shared preference is null.
   final ThemeMode defaultTheme;
 
-  /// If the widget should render an empty container while themeMode is null.
-  /// This is the recommended behavior.
-  ///
-  /// themeMode is null while the preference is loaded, therefore,
-  /// to prevent a flash effect, you can render an empty container.
-  final bool withFallback;
+  /// While the themeMode is loaded, you can choose to render a different widget.
+  /// By default, it'll render an empty container.
+  final Widget? placeholderWidget;
 
   /// Creates a `ThemeModeHandler`.
   const ThemeModeHandler({
-    Key key,
-    @required this.builder,
-    @required this.manager,
+    Key? key,
+    required this.builder,
+    required this.manager,
     this.defaultTheme = ThemeMode.system,
-    this.withFallback = true,
-  })  : assert(builder != null),
-        assert(manager != null),
-        super(key: key);
+    this.placeholderWidget,
+  }) : super(key: key);
 
   @override
   _ThemeModeHandlerState createState() => _ThemeModeHandlerState();
 
   /// Access to the closest [ThemeModeHandler] instance to the given context.
-  static _ThemeModeHandlerState of(BuildContext context) {
+  static _ThemeModeHandlerState? of(BuildContext context) {
     return context.findAncestorStateOfType<_ThemeModeHandlerState>();
   }
 }
 
 class _ThemeModeHandlerState extends State<ThemeModeHandler> {
-  ThemeMode _themeMode;
+  late final Future<ThemeMode> _initFuture = _loadThemeMode();
+  late ThemeMode _themeMode;
 
   /// Current selected value.
   ThemeMode get themeMode => _themeMode;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadThemeMode().then(_updateThemeMode);
-  }
 
   /// Updates the themeMode and calls `manager.saveThemeMode`.
   Future<void> saveThemeMode(ThemeMode value) async {
@@ -61,20 +51,25 @@ class _ThemeModeHandlerState extends State<ThemeModeHandler> {
 
   Future<ThemeMode> _loadThemeMode() async {
     final value = await widget.manager.loadThemeMode();
-
-    return ThemeMode.values.firstWhere(
+    final theme = ThemeMode.values.firstWhere(
       (v) => v.toString() == value,
       orElse: () => widget.defaultTheme,
     );
+
+    _updateThemeMode(theme);
+    return theme;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (themeMode == null && widget.withFallback) {
-      return Container();
-    }
-
-    return widget.builder(_themeMode);
+    return FutureBuilder<ThemeMode>(
+      future: _initFuture,
+      builder: (_, snapshot) {
+        return snapshot.hasData
+            ? widget.builder(_themeMode)
+            : widget.placeholderWidget ?? Container();
+      },
+    );
   }
 
   void _updateThemeMode(ThemeMode value) {

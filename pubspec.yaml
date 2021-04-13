@@ -1,18 +1,17 @@
 name: theme_mode_handler
-description: Widget to change themeMode during runtime and persist it across restarts
+description: Flutter widget to change `themeMode` during runtime and persist it across restarts
 version: 2.0.0
 homepage: 'https://github.com/arthurdenner/theme_mode_handler'
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  effective_dart: ^1.2.0
-  mockito: ^4.1.1
+  mockito: ^5.0.0
   flutter_test:
     sdk: flutter
 

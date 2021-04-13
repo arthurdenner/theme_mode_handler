@@ -1,9 +1,10 @@
 name: theme_mode_handler_example
 description: Demonstrates how to use the theme_mode_handler plugin.
+version: 0.0.0
 publish_to: 'none'
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -11,8 +12,8 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
-  shared_preferences: ^0.5.7+1
+  cupertino_icons: ^1.0.2
+  shared_preferences: ^2.0.3
 
 dev_dependencies:
   flutter_test:

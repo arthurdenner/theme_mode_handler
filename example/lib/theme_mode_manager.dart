@@ -5,8 +5,10 @@ class ExampleThemeModeManager implements IThemeModeManager {
   static const _key = 'example_theme_mode';
 
   @override
-  Future<String> loadThemeMode() async {
+  Future<String?> loadThemeMode() async {
     final _prefs = await SharedPreferences.getInstance();
+    // Intended delay for demonstration purposes
+    await Future.delayed(Duration(milliseconds: 500));
 
     return _prefs.getString(_key);
   }
