@@ -77,6 +77,8 @@ ThemeModeHandler.of(context).saveThemeMode(value);
 ThemeModeHandler.of(context).themeMode;
 ```
 
+Check the `example` folder for a complete example.
+
 ## API
 
 ### builder
@@ -122,8 +124,6 @@ void _selectThemeMode(BuildContext context) async {
   print(newThemeMode);
 }
 ```
-
-A complete example can be found in the `example` folder.
 
 ## Inspiration
 
