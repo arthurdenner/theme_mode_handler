@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:theme_mode_handler/theme_mode_handler.dart';
 import 'package:theme_mode_handler/theme_picker_dialog.dart';
 
+import './utils/debouncer.dart';
 import 'theme_mode_manager.dart';
 
 void main() => runApp(ExampleApp());
@@ -35,8 +36,32 @@ class _ExampleAppState extends State<ExampleApp> {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  final _debouncer = Debouncer(ms: 1000);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    _onPlatformBrightnessChange();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,5 +91,14 @@ class HomePage extends StatelessWidget {
   void _selectThemeMode(BuildContext context) async {
     final newThemeMode = await showThemePickerDialog(context: context);
     print(newThemeMode);
+  }
+
+  void _onPlatformBrightnessChange() async {
+    final currentBrightness = MediaQuery.of(context).platformBrightness;
+    print('currentBrightness: $currentBrightness');
+
+    // await ThemeModeHandler.of(context)?.saveThemeMode(
+    //   currentBrightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light,
+    // );
   }
 }
