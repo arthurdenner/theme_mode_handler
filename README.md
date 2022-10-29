@@ -1,5 +1,10 @@
 # theme_mode_handler
 
+> This library is considered done - no new features or changes are foreseen.
+> You may not see recent updates to this repository, but the library is totally functional.
+> Please [open an issue](https://github.com/arthurdenner/theme_mode_handler/issues) if you find an issue
+> or think something is missing so we can discuss it.
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 
 [![version][version-badge]][package]
